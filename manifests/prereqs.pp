@@ -23,7 +23,6 @@ class redis_multinode::prereqs {
       $packages = [
         'build-essential',
         'wget',
-        'augeas-tools',
         'haproxy',
         'python-pip',
       ]
