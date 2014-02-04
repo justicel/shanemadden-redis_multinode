@@ -11,7 +11,7 @@ class redis_multinode::prereqs {
         'python-pip',
       ]
       package { $packages:
-        ensure => installed,
+        ensure => latest,
       }
       package { "redis":
         ensure   => installed,
