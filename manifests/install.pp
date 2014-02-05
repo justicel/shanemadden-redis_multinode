@@ -56,19 +56,21 @@ class redis_multinode::install {
     source   => "puppet:///modules/redis_multinode/redis.logrotate",
   }
 
-  # setup for the script that manages the haproxy config..
-  file { "/var/redis/check-masters.py":
-    ensure   => present,
-    source   => "puppet:///modules/redis_multinode/check-masters.py",
-    mode     => 755,
-    require  => File["/var/redis"],
-  }
+  if $redis_multinode::use_haproxy {
+    # Setup for the script that manages the haproxy config..
+    file { "/var/redis/check-masters.py":
+      ensure   => present,
+      source   => "puppet:///modules/redis_multinode/check-masters.py",
+      mode     => 755,
+      require  => File["/var/redis"],
+    }
   
-  # Run the master check every minute..
-  cron { "redis-check-masters":
-    command  => "/var/redis/check-masters.py > /dev/null 2>&1",
-    user     => root,
-    minute   => "*",
-    require  => [ File["/var/redis/check-masters.py"], Class["redis_multinode::haproxy"], ],
+    # Run the master check every minute..
+    cron { "redis-check-masters":
+      command  => "/var/redis/check-masters.py > /dev/null 2>&1",
+      user     => root,
+      minute   => "*",
+      require  => [ File["/var/redis/check-masters.py"], Class["redis_multinode::haproxy"], ],
+    }
   }
 }
