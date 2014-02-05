@@ -1,4 +1,10 @@
 class redis_multinode::prereqs {
+
+  #Bulk install of haproxy if required
+  if $redis_multinode::use_haproxy {
+    package { 'haproxy': ensure => latest, }
+  }
+
   case $osfamily {
     redhat: {
       $packages = [
@@ -6,7 +12,6 @@ class redis_multinode::prereqs {
         'make',
         'wget',
         'augeas',
-        'haproxy',
         # EPEL required for this!
         'python-pip',
       ]
@@ -23,11 +28,10 @@ class redis_multinode::prereqs {
       $packages = [
         'build-essential',
         'wget',
-        'haproxy',
         'python-pip',
       ]
       package { $packages:
-        ensure => installed,
+        ensure => latest,
       }
       package { "redis":
         ensure   => installed,
