@@ -4,7 +4,7 @@ define redis_multinode::instance (
   $master_ip        = hiera("redis_multinode::${title}::master_ip", $ipaddress),
   $listen_reader    = hiera("redis_multinode::${title}::listen_reader", "6379"),
   $listen_writer    = hiera("redis_multinode::${title}::listen_writer", "6380"),
-  $use_password     = heira("redis_multinode::${title}::use_password", true),
+  $use_password     = hiera("redis_multinode::${title}::use_password", true),
   $password         = hiera("redis_multinode::${title}::password", "changeme"),
   $slave_priority   = hiera("redis_multinode::${title}::slave_priority", "100"),
   $appendonly       = hiera("redis_multinode::${title}::appendonly", "yes"),
