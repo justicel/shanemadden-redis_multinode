@@ -98,9 +98,11 @@ define redis_multinode::instance (
       "set masterauth '${password}'",
     ]
     $changes = concat($change_list, $password_changes)
+    $sentinel_command = "sentinel monitor ${instance_name} ${master_ip} ${listen_reader} ${quorum}\\nsentinel down-after-milliseconds ${instance_name} 15000"
   }
   else {
     $changes  = $change_list
+    $sentinel_command = "sentinel monitor ${instance_name} ${master_ip} ${listen_reader} ${quorum}\\nsentinel down-after-milliseconds ${instance_name} 15000\\nsentinel auth-pass ${instance_name} ${password}"
   }
 
   # Thankfully it's up to the task with the Redis lens.
@@ -137,10 +139,11 @@ define redis_multinode::instance (
     subscribe => Exec["compile and install redis"],
   }
 
+  
   # The sentinel config file has other instances in it, and can change at any time due to failover or node join.
   # We'll just check and see if this instance is configured and add it if not - we can't manage the whole file.
   exec { "insert sentinel config ${listen_reader}":
-    command   => "/bin/echo -e \"sentinel monitor ${instance_name} ${master_ip} ${listen_reader} ${quorum}\\nsentinel down-after-milliseconds ${instance_name} 15000\\nsentinel auth-pass ${instance_name} ${password}\" >> /etc/redis/sentinel.conf",
+    command   => "/bin/echo -e \"${sentinel_command}\" >> /etc/redis/sentinel.conf",
     unless    => "/bin/grep -F \"${instance_name}\" /etc/redis/sentinel.conf",
     notify    => Service["redis_sentinel"],
     require   => [ Service["redis_${listen_reader}"], Exec["create sentinel.conf"], ],

@@ -15,7 +15,11 @@
 REDIS_PORT="<%= @listen_reader %>"
 INSTANCENAME="<%= @instance_name %>"
 EXEC=/usr/local/bin/redis-server
+<% if @use_password %>
 CLIEXEC="/usr/local/bin/redis-cli -p $REDIS_PORT -a <%= @password %>"
+<% else %>
+CLIEXEC="/usr/local/bin/redis-cli -p $REDIS_PORT"
+<% end %>
 PIDFILE="/var/run/redis-<%= @listen_reader %>.pid"
 CONF="/etc/redis/<%= @listen_reader %>.conf"
 
