@@ -100,7 +100,8 @@ define redis_multinode::instance (
     $changes = concat($change_list, $password_changes)
   }
   else {
-    $changes = $change_list
+    $changes  = $change_list
+    $password = undef
   }
 
   # Thankfully it's up to the task with the Redis lens.
