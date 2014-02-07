@@ -98,11 +98,11 @@ define redis_multinode::instance (
       "set masterauth '${password}'",
     ]
     $changes = concat($change_list, $password_changes)
-    $sentinel_command = "sentinel monitor ${instance_name} ${master_ip} ${listen_reader} ${quorum}\\nsentinel down-after-milliseconds ${instance_name} 15000"
+    $sentinel_command = "sentinel monitor ${instance_name} ${master_ip} ${listen_reader} ${quorum}\\nsentinel down-after-milliseconds ${instance_name} 15000\\nsentinel auth-pass ${instance_name} ${password}"
   }
   else {
     $changes  = $change_list
-    $sentinel_command = "sentinel monitor ${instance_name} ${master_ip} ${listen_reader} ${quorum}\\nsentinel down-after-milliseconds ${instance_name} 15000\\nsentinel auth-pass ${instance_name} ${password}"
+    $sentinel_command = "sentinel monitor ${instance_name} ${master_ip} ${listen_reader} ${quorum}\\nsentinel down-after-milliseconds ${instance_name} 15000"
   }
 
   # Thankfully it's up to the task with the Redis lens.
