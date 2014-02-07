@@ -101,7 +101,6 @@ define redis_multinode::instance (
   }
   else {
     $changes  = $change_list
-    $password = undef
   }
 
   # Thankfully it's up to the task with the Redis lens.
