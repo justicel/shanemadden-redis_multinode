@@ -39,7 +39,7 @@ define redis_multinode::instance (
   # Augeas is needed since we can't manage the entire file without stomping on sentinel's config changes.
   
   #Define change-list for augeas
-  $changes = [
+  $change_list = [
     "set #comment[1] '${instance_name}'",
     "set port '${listen_reader}'",
     "set pidfile '/var/run/redis-${listen_reader}.pid'",
@@ -97,9 +97,12 @@ define redis_multinode::instance (
       "set requirepass '${password}'",
       "set masterauth '${password}'",
     ]
-    $changes = concat($changes, $password_changes)
+    $changes = concat($change_list, $password_changes)
   }
-  
+  else {
+    $changes = $change_list
+  }
+
   # Thankfully it's up to the task with the Redis lens.
   augeas { "config ${listen_reader}":
     lens      => "Redis.lns",
