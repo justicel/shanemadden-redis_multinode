@@ -86,7 +86,7 @@ define redis_multinode::instance (
     "set zset-max-ziplist-entries '128'",
     "set zset-max-ziplist-value '64'",
     "set activerehashing 'yes'",
-    "set hz '10'",
+    "set hz '50'",
     "set aof-rewrite-incremental-fsync 'yes'",
     #https://github.com/antirez/redis/issues/1434
     #"set min-slaves-to-write '1'",
